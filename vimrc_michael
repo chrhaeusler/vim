@@ -1,0 +1,87 @@
+" linenumbers
+au FocusLost * set number
+au FocusGained * set relativenumber
+autocmd InsertEnter * set number
+autocmd InsertLeave * set relativenumber
+
+syntax on
+set mouse=a
+" colorscheme fnaqevan
+colorscheme greens
+" colorscheme chela_light
+
+set backupdir =$HOME/.vim/backupdir
+
+set list listchars=tab:»·,trail:·
+
+set visualbell    " visual bell instead of beeping
+"-------------------------------------------------------------------------------
+"" Leave the editor with Ctrl-q : Write all changed buffers and exit Vim
+"-------------------------------------------------------------------------------
+nmap <C-q>     :wqa<CR>
+"nmap <C-ma>     :w<CR>:!make<CR>
+"nmap <C-mc>     :!make clean<CR>
+
+set softtabstop=4   " makes the spaces feel like real tabs
+
+set modelines=4
+
+"set spell
+
+au BufNewFile,BufRead *.psp		setf python
+
+autocmd FileType * set tabstop=4|set shiftwidth=4|set noexpandtab
+autocmd FileType python set tabstop=4|set shiftwidth=4|set expandtab
+autocmd FileType rst set tabstop=4|set shiftwidth=4|set expandtab
+" TIP: if you write your \label's as \label{fig:something}, then if you
+" type in \ref{fig: and press <C-n> you will automatically cycle through
+" all the figure labels. Very useful!
+autocmd FileType tex set tabstop=2|set softtabstop=2|set sw=2|set expandtab|set iskeyword+=:
+" enable ALT+ bindings in latex-suite
+set winaltkeys=no
+
+" automatically remove trailing whitespace when saving
+" autocmd BufWritePre * :%s/\s\+$//e
+
+" bind whitespace removal to F5
+:nnoremap <silent> <F5> :let _s=@/<Bar>:%s/\s\+$//e<Bar>:let @/=_s<Bar>:nohl<CR>
+
+autocmd FileType python compiler pylint
+let g:pylint_onwrite = 0
+let g:pylint_show_rate = 0
+
+if has('gui_running')
+  set guifont=Inconsolata\ Medium\ 10
+  colorscheme chela_light
+endif
+
+"folding
+set fdm=indent
+
+" highlight 'if more than 80 chars
+" old way
+"au BufNewFile,BufRead * exec 'match Todo /\%>' .  80 . 'v.\+/'
+" new way
+call matchadd('ColorColumn', '\%81v', 100)
+
+
+" REQUIRED. This makes vim invoke Latex-Suite when you open a tex file.
+filetype plugin on
+
+" IMPORTANT: grep will sometimes skip displaying the file name if you
+" search in a singe file. This will confuse Latex-Suite. Set your grep
+" program to always generate a file-name.
+set grepprg=grep\ -nH\ $*
+
+" OPTIONAL: This enables automatic indentation as you type.
+filetype indent on
+
+
+" Git
+" be nice when commiting
+autocmd FileType gitcommit DiffGitCached | wincmd J
+
+
+" sane tab-completion
+set wildmode=longest,list:longest,list:full
+
